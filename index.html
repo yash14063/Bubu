@@ -12,33 +12,55 @@
     }
 
     body {
-      background-color: #ffe6ea;
+      background: linear-gradient(135deg, #ffe6ea 0%, #ffc2d1 100%);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+
+    /* Floating Hearts Animation */
+    .heart-particle {
+      position: fixed;
+      color: #ff4d6d;
+      font-size: 20px;
+      user-select: none;
+      pointer-events: none;
+      animation: floatUp 4s linear forwards;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
+      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
     }
 
     .card {
-      background: white;
-      padding: 2.5rem;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(255, 182, 193, 0.5);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(5px);
+      padding: 2.5rem 2rem;
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(255, 154, 162, 0.4);
       text-align: center;
-      max-width: 400px;
-      width: 90%;
+      max-width: 420px;
+      width: 100%;
       position: relative;
+      z-index: 10;
+      border: 2px solid #fff;
     }
 
     .character-box {
-      width: 160px;
-      height: 160px;
-      margin: 0 auto 1.5rem auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 1rem auto;
+      transition: transform 0.3s ease;
+    }
+
+    .character-box:hover {
+      transform: scale(1.05);
     }
 
     .character-box svg {
@@ -48,115 +70,185 @@
 
     h1 {
       color: #ff4d6d;
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
+      font-size: 1.7rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .subtext {
+      color: #666;
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.4;
+    }
+
+    .reasons-box {
+      background: #fff0f3;
+      border-radius: 15px;
+      padding: 12px;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      color: #ff4d6d;
+      font-weight: 600;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #ffb3c1;
     }
 
     .btn-container {
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin-top: 1rem;
+      gap: 12px;
+      margin-top: 0.5rem;
       position: relative;
       min-height: 50px;
     }
 
     button {
-      padding: 12px 28px;
-      font-size: 1.1rem;
+      padding: 12px 24px;
+      font-size: 1rem;
       font-weight: bold;
       border: none;
       border-radius: 25px;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: all 0.2s ease;
     }
 
-    #yesBtn {
+    .btn-primary {
       background-color: #ff4d6d;
       color: white;
-      box-shadow: 0 4px 10px rgba(255, 77, 109, 0.3);
+      box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3);
     }
 
-    #yesBtn:hover {
-      transform: scale(1.1);
+    .btn-primary:hover {
+      transform: scale(1.08);
       background-color: #ff2a54;
     }
 
+    .btn-secondary {
+      background-color: #ff85a1;
+      color: white;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
     #noBtn {
-      background-color: #cccccc;
-      color: #333;
+      background-color: #e0e0e0;
+      color: #555;
       position: absolute;
-      right: 40px;
+      right: 30px;
     }
 
     .hidden {
-      display: none;
+      display: none !important;
     }
 
+    /* Celebration Page Styling */
     .celebration {
-      font-size: 1.2rem;
-      color: #c9184a;
-      line-height: 1.6;
+      animation: fadeIn 0.8s ease-in;
     }
 
-    .hearts {
-      font-size: 2rem;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .love-letter {
+      background: #fff5f7;
+      border-left: 4px solid #ff4d6d;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 0.92rem;
+      color: #4a4a4a;
+      line-height: 1.6;
+      margin: 15px 0;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .hearts-row {
+      font-size: 1.8rem;
       margin-top: 10px;
-      animation: pulse 1s infinite alternate;
+      animation: pulse 1.2s infinite alternate;
     }
 
     @keyframes pulse {
       from { transform: scale(1); }
-      to { transform: scale(1.1); }
+      to { transform: scale(1.15); }
     }
   </style>
 </head>
 <body>
 
   <div class="card" id="proposalCard">
-    <!-- Cute SVG Bear (No external URLs needed) -->
+    <!-- SVG Character -->
     <div class="character-box" id="avatarBox">
-      <svg viewBox="0 0 200 200" id="bearSvg">
-        <!-- Ears -->
+      <svg viewBox="0 0 200 200">
         <circle cx="50" cy="50" r="25" fill="#f4a261" />
         <circle cx="50" cy="50" r="14" fill="#e76f51" />
         <circle cx="150" cy="50" r="25" fill="#f4a261" />
         <circle cx="150" cy="50" r="14" fill="#e76f51" />
-        <!-- Head -->
         <circle cx="100" cy="100" r="70" fill="#f4a261" />
-        <!-- Snout -->
         <ellipse cx="100" cy="115" rx="25" ry="18" fill="#fff" />
         <ellipse cx="100" cy="108" rx="10" ry="7" fill="#2b2d42" />
-        <!-- Eyes -->
         <circle cx="75" cy="90" r="8" fill="#2b2d42" />
         <circle cx="125" cy="90" r="8" fill="#2b2d42" />
         <circle cx="77" cy="88" r="3" fill="#fff" />
         <circle cx="127" cy="88" r="3" fill="#fff" />
-        <!-- Blush -->
         <ellipse cx="60" cy="105" rx="8" ry="5" fill="#ff85a1" opacity="0.6" />
         <ellipse cx="140" cy="105" rx="8" ry="5" fill="#ff85a1" opacity="0.6" />
-        <!-- Heart held -->
         <path d="M100 135 C 80 110, 50 130, 100 170 C 150 130, 120 110, 100 135 Z" fill="#ff4d6d" />
       </svg>
     </div>
+
+    <!-- Interactive Heart Note Box -->
+    <button class="btn-secondary" onclick="nextReason()">Tap for a reason why I love you! 💌</button>
+    <div class="reasons-box" id="reasonText">You make my life so much brighter every single day! ✨</div>
     
     <h1 id="question">Bubu, will you be my Forever Valentine? 🥺❤️</h1>
+    <p class="subtext" id="subtext">Life is 1000x sweeter with you by my side!</p>
     
     <div class="btn-container" id="btnGroup">
-      <button id="yesBtn" onclick="acceptProposal()">YES!</button>
+      <button class="btn-primary" id="yesBtn" onclick="acceptProposal()">YES! 💖</button>
       <button id="noBtn" onmouseover="dodgeNo()" onclick="dodgeNo()">No</button>
     </div>
 
-    <div id="successMessage" class="hidden">
-      <div class="celebration">
-        YAAAAAY! I knew you'd say yes, Bubu! <br> 
-        I love you so so much! 🐻💖🐼
+    <!-- Celebration Screen -->
+    <div id="successMessage" class="celebration hidden">
+      <h1 style="color: #ff4d6d;">YAAAAAY! 🎉</h1>
+      
+      <div class="love-letter">
+        <strong>My dearest Bubu,</strong><br><br>
+        Thank you for being my favorite person, my safest space, and my biggest source of happiness. I promise to always keep you fed, give you endless hugs, squeeze you tightly, and cherish every moment with you.<br><br>
+        I love you more than words can ever say! 🐻💖🐼
       </div>
-      <div class="hearts">💖💕🎉✨🥰</div>
+
+      <div class="hearts-row">💖💕🎉✨🥰</div>
     </div>
   </div>
 
   <script>
+    // List of sweet reasons
+    const reasons = [
+      "You have the cutest smile in the entire world! 😊",
+      "Your hugs fix even the worst days. 🫂",
+      "You make me laugh like nobody else can. 😂💗",
+      "You're my best friend and favorite partner. 🐻🐼",
+      "Just thinking about you makes my heart skip a beat! 💓",
+      "You are warm, kind, and incredibly sweet! 🍬"
+    ];
+    let reasonIdx = 0;
+
+    function nextReason() {
+      reasonIdx = (reasonIdx + 1) % reasons.length;
+      document.getElementById('reasonText').innerText = reasons[reasonIdx];
+      createHeart();
+    }
+
+    // Dodge logic for No Button
     function dodgeNo() {
       const noBtn = document.getElementById('noBtn');
       const card = document.getElementById('proposalCard');
@@ -173,12 +265,30 @@
       noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
 
+    // Floating heart generator
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart-particle');
+      heart.innerHTML = ['💖', '💕', '💗', '✨', '🌸'][Math.floor(Math.random() * 5)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 4000);
+    }
+
+    setInterval(createHeart, 800);
+
+    // Proposal acceptance
     function acceptProposal() {
       document.getElementById('question').classList.add('hidden');
+      document.getElementById('subtext').classList.add('hidden');
       document.getElementById('btnGroup').classList.add('hidden');
+      document.querySelector('.btn-secondary').classList.add('hidden');
+      document.getElementById('reasonText').classList.add('hidden');
+      
       document.getElementById('successMessage').classList.remove('hidden');
       
-      // Transform SVG to Happy Heart-Eyes Bear
+      // Update SVG to Heart-Eyes Bear
       document.getElementById('avatarBox').innerHTML = `
         <svg viewBox="0 0 200 200">
           <circle cx="50" cy="50" r="25" fill="#f4a261" />
@@ -188,15 +298,18 @@
           <circle cx="100" cy="100" r="70" fill="#f4a261" />
           <ellipse cx="100" cy="115" rx="25" ry="18" fill="#fff" />
           <ellipse cx="100" cy="108" rx="10" ry="7" fill="#2b2d42" />
-          <!-- Heart Eyes -->
           <path d="M75 80 C 65 65, 45 80, 75 100 C 105 80, 85 65, 75 80 Z" fill="#ff4d6d" transform="scale(0.5) translate(75, 70)" />
           <path d="M125 80 C 115 65, 95 80, 125 100 C 155 80, 135 65, 125 80 Z" fill="#ff4d6d" transform="scale(0.5) translate(175, 70)" />
-          <!-- Big Smile -->
           <path d="M 85 120 Q 100 135 115 120" stroke="#2b2d42" stroke-width="4" fill="none" stroke-linecap="round" />
           <ellipse cx="55" cy="105" rx="10" ry="6" fill="#ff85a1" opacity="0.8" />
           <ellipse cx="145" cy="105" rx="10" ry="6" fill="#ff85a1" opacity="0.8" />
         </svg>
       `;
+
+      // Explode extra hearts
+      for(let i = 0; i < 25; i++) {
+        setTimeout(createHeart, i * 50);
+      }
     }
   </script>
 </body>
