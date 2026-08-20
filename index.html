@@ -22,20 +22,18 @@
       padding: 20px;
     }
 
-    /* Floating Hearts Animation */
-    .heart-particle {
+    /* Floating Particles */
+    .particle {
       position: fixed;
-      color: #ff4d6d;
-      font-size: 20px;
       user-select: none;
       pointer-events: none;
-      animation: floatUp 4s linear forwards;
-      z-index: 1;
+      animation: floatUp 3s ease-out forwards;
+      z-index: 99;
     }
 
     @keyframes floatUp {
-      0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
-      100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+      0% { transform: translateY(0) scale(0.6); opacity: 1; }
+      100% { transform: translateY(-80vh) scale(1.5); opacity: 0; }
     }
 
     .card {
@@ -56,11 +54,17 @@
       width: 150px;
       height: 150px;
       margin: 0 auto 1rem auto;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .character-box:hover {
-      transform: scale(1.05);
+    .character-box.kiss-anim {
+      animation: kissBounce 0.6s ease-in-out;
+    }
+
+    @keyframes kissBounce {
+      0% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.2) translateY(-10px) rotate(-5deg); }
+      100% { transform: scale(1) translateY(0); }
     }
 
     .character-box svg {
@@ -85,7 +89,7 @@
       background: #fff0f3;
       border-radius: 15px;
       padding: 12px;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
       font-size: 0.95rem;
       color: #ff4d6d;
       font-weight: 600;
@@ -126,6 +130,17 @@
       background-color: #ff2a54;
     }
 
+    .btn-kiss {
+      background: linear-gradient(45deg, #ff4d6d, #ff758f);
+      color: white;
+      box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+      margin-bottom: 0.8rem;
+    }
+
+    .btn-kiss:hover {
+      transform: scale(1.05);
+    }
+
     .btn-secondary {
       background-color: #ff85a1;
       color: white;
@@ -145,7 +160,6 @@
       display: none !important;
     }
 
-    /* Celebration Page Styling */
     .celebration {
       animation: fadeIn 0.8s ease-in;
     }
@@ -204,7 +218,10 @@
       </svg>
     </div>
 
-    <!-- Interactive Heart Note Box -->
+    <!-- Kiss Button -->
+    <button class="btn-kiss" onclick="giveKiss()">Send Bubu a Kiss! 💋 MWAH!</button>
+
+    <!-- Reasons Box -->
     <button class="btn-secondary" onclick="nextReason()">Tap for a reason why I love you! 💌</button>
     <div class="reasons-box" id="reasonText">You make my life so much brighter every single day! ✨</div>
     
@@ -222,7 +239,7 @@
       
       <div class="love-letter">
         <strong>My dearest Bubu,</strong><br><br>
-        Thank you for being my favorite person, my safest space, and my biggest source of happiness. I promise to always keep you fed, give you endless hugs, squeeze you tightly, and cherish every moment with you.<br><br>
+        Thank you for being my favorite person, my safest space, and my biggest source of happiness. I promise to always keep you fed, give you endless hugs, squeeze you tightly, and shower you with infinite kisses every single day.<br><br>
         I love you more than words can ever say! 🐻💖🐼
       </div>
 
@@ -231,7 +248,54 @@
   </div>
 
   <script>
-    // List of sweet reasons
+    // Audio Context Synthesizer for Kiss Sound (No external audio files needed)
+    function playKissSound() {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Pop noise
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.15);
+      
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.15);
+    }
+
+    // Kiss Action
+    function giveKiss() {
+      playKissSound();
+
+      // Trigger Bear Kiss Animation
+      const avatar = document.getElementById('avatarBox');
+      avatar.classList.add('kiss-anim');
+      setTimeout(() => avatar.classList.remove('kiss-anim'), 600);
+
+      // Spawn floating kiss marks & hearts
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => {
+          const particle = document.createElement('div');
+          particle.classList.add('particle');
+          particle.innerHTML = ['💋', '💖', '😘', '💕', '💋'][Math.floor(Math.random() * 5)];
+          particle.style.fontSize = (Math.random() * 15 + 20) + 'px';
+          particle.style.left = (Math.random() * 60 + 20) + 'vw';
+          particle.style.top = '60vh';
+          document.body.appendChild(particle);
+          setTimeout(() => particle.remove(), 3000);
+        }, i * 60);
+      }
+    }
+
+    // Reasons List
     const reasons = [
       "You have the cutest smile in the entire world! 😊",
       "Your hugs fix even the worst days. 🫂",
@@ -248,7 +312,7 @@
       createHeart();
     }
 
-    // Dodge logic for No Button
+    // Dodge logic
     function dodgeNo() {
       const noBtn = document.getElementById('noBtn');
       const card = document.getElementById('proposalCard');
@@ -265,21 +329,24 @@
       noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
     }
 
-    // Floating heart generator
+    // Ambient floating hearts
     function createHeart() {
       const heart = document.createElement('div');
-      heart.classList.add('heart-particle');
+      heart.classList.add('particle');
       heart.innerHTML = ['💖', '💕', '💗', '✨', '🌸'][Math.floor(Math.random() * 5)];
       heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = '100vh';
       heart.style.animationDuration = Math.random() * 2 + 3 + 's';
       document.body.appendChild(heart);
       setTimeout(() => heart.remove(), 4000);
     }
 
-    setInterval(createHeart, 800);
+    setInterval(createHeart, 1000);
 
     // Proposal acceptance
     function acceptProposal() {
+      giveKiss(); // Play kiss sound and animation on Yes!
+      
       document.getElementById('question').classList.add('hidden');
       document.getElementById('subtext').classList.add('hidden');
       document.getElementById('btnGroup').classList.add('hidden');
@@ -288,7 +355,7 @@
       
       document.getElementById('successMessage').classList.remove('hidden');
       
-      // Update SVG to Heart-Eyes Bear
+      // Update SVG to Kissing / Heart Eyes Bear
       document.getElementById('avatarBox').innerHTML = `
         <svg viewBox="0 0 200 200">
           <circle cx="50" cy="50" r="25" fill="#f4a261" />
@@ -305,11 +372,6 @@
           <ellipse cx="145" cy="105" rx="10" ry="6" fill="#ff85a1" opacity="0.8" />
         </svg>
       `;
-
-      // Explode extra hearts
-      for(let i = 0; i < 25; i++) {
-        setTimeout(createHeart, i * 50);
-      }
     }
   </script>
 </body>
